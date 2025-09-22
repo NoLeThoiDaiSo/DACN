@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 40">
+  <rect width="160" height="40" rx="8" fill="#0b0f14"/>
+  <circle cx="24" cy="20" r="10" fill="#f0b429"/>
+  <path d="M20 22 l4-8 4 8z" fill="#0b0f14"/>
+  <text x="44" y="26" fill="#e6edf3" font-family="Segoe UI, Roboto, sans-serif" font-size="18" font-weight="700">MLJudge</text>
+</svg>

@@ -1,0 +1,91 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="auth-card">
+  <h1 class="title">Create account</h1>
+
+  <form method="post" action="/auth/register" class="form" id="reg-form" novalidate>
+    <label>Username
+      <input id="username" name="username" required minlength="6" maxlength="20" pattern="[A-Za-z0-9_]+"
+             hx-get="/auth/check-username"
+             hx-trigger="keyup changed delay:300ms"
+             hx-target="#user-check"
+             hx-swap="innerHTML"
+             hx-disabled="true">
+    </label>
+    <div id="user-check" class="inline-hint"></div>
+
+    <label>Email
+      <input type="email" name="email" required>
+    </label>
+
+    <label>Password
+      <input id="password" type="password" name="password" required minlength="8" maxlength="50" pattern="[A-Za-z0-9]+">
+    </label>
+    <div id="pw-check" class="inline-hint"></div>
+
+    <label>Confirm password
+      <input id="confirm" type="password" name="confirm" required minlength="8" maxlength="50" pattern="[A-Za-z0-9]+">
+    </label>
+
+    <button class="btn full">Create account</button>
+  </form>
+
+  <p class="muted">Already have an account? <a href="/auth/login" class="link">Sign in</a></p>
+</section>
+
+<script>
+  // Chỉ bật check sau lần nhập đầu tiên
+  (function () {
+    const u = document.getElementById('username');
+    const p = document.getElementById('password');
+    const c = document.getElementById('confirm');
+    const pwHint = document.getElementById('pw-check');
+
+    function enableHtmxOnce(inputEl) {
+      const onFirstInput = () => {
+        inputEl.removeAttribute('hx-disabled');
+        inputEl.dispatchEvent(new Event('keyup')); // kích hoạt check lần đầu sau nhập
+        inputEl.removeEventListener('input', onFirstInput);
+      };
+      inputEl.addEventListener('input', onFirstInput, { once: true });
+    }
+    enableHtmxOnce(u);
+
+    // Local password check — không gọi server, hiển thị gợi ý rõ ràng
+    function checkPassword() {
+      const val = p.value || "";
+      if (!val) { pwHint.textContent = ""; return; }
+      const okLen = val.length >= 8 && val.length <= 50;
+      const okRe = /^[A-Za-z0-9]+$/.test(val);
+      if (okLen && okRe) {
+        pwHint.innerHTML = "<span class='hint ok'>✔ Mật khẩu hợp lệ (8–50, A–Z a–z 0–9)</span>";
+      } else if (!okLen) {
+        pwHint.innerHTML = "<span class='hint err'>✖ Độ dài 8–50 ký tự</span>";
+      } else {
+        pwHint.innerHTML = "<span class='hint err'>✖ Chỉ cho phép A–Z, a–z, 0–9</span>";
+      }
+    }
+    // Chỉ bắt đầu check sau lần nhập đầu
+    p.addEventListener('input', function once() {
+      p.removeEventListener('input', once);
+      p.addEventListener('input', checkPassword);
+      checkPassword();
+    });
+
+    // Optional: confirm match (sau lần nhập đầu)
+    function checkConfirm() {
+      if (!c.value) return;
+      if (c.value === p.value) {
+        c.setCustomValidity("");
+      } else {
+        c.setCustomValidity("Mật khẩu xác nhận không khớp.");
+      }
+    }
+    c.addEventListener('input', function once() {
+      c.removeEventListener('input', once);
+      c.addEventListener('input', checkConfirm);
+      checkConfirm();
+    });
+  })();
+</script>
+{% endblock %}

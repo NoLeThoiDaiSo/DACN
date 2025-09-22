@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+<section class="page-head">
+  <h1 class="title">Problems</h1>
+</section>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th style="width:64px;">#</th>
+      <th>Title</th>
+      <th>Avg Loss</th>
+      <th>Difficulty</th>
+      <th style="width:120px;">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for p in problems %}
+    <tr>
+      <td>{{ p.id }}</td>
+      <td><a class="link" href="#">{{ p.title }}</a></td>
+      <td>{{ '%.3f'|format(p.avg_loss) }}</td>
+      <td class="badge {{ p.difficulty|lower }}">{{ p.difficulty }}</td>
+      <td class="status">—</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

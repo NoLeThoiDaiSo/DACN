@@ -1,0 +1,19 @@
+<header class="nav">
+  <a class="brand" href="/">
+    <img src="/static/img/logo.svg" alt="logo">
+  </a>
+  <nav class="links">
+    <a href="/problems" class="link">Problems</a>
+  </nav>
+  <div class="auth">
+    {% if request.session.get('user') %}
+      <span class="user">👤 {{ request.session.get('user') }}</span>
+      <form method="post" action="/auth/logout" class="inline">
+        <button class="btn">Logout</button>
+      </form>
+    {% else %}
+      <a class="btn ghost" href="/auth/login">Login</a>
+      <a class="btn" href="/auth/register">Register</a>
+    {% endif %}
+  </div>
+</header>
